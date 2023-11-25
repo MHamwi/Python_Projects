@@ -8,14 +8,13 @@ while run:
         init_input = input('Enter (a) to add your first task, or (c) to close the program').lower()
         if init_input == 'a':
             new_task= input('Enter the new task')
-            to_do_list.append(new_task)
+            
         elif init_input == 'c':
             run= False
             break
         else:
             print(f'the program didnt support this command: {init_input}')
             continue
-        
         to_do_list.append(new_task)
     while to_do_list != []:
         print('the current ToDoList is: ')
