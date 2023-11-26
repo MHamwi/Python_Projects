@@ -1,64 +1,70 @@
 import random
 
 def greet_player():
-    """Display a welcome message to the player."""
-    print("Welcome to the Guess the Number game!")
+    """Greet the player."""
+    print("Welcome to the Number Guessing Game!")
 
-def get_player_choice():
-    """Ask the player if they want to play the game."""
+def ask_to_play():
+    """Ask the player if they want to play."""
     while True:
-        choice = input("Do you want to play? (yes/no): ").lower()
-        if choice in ['yes', 'no']:
-            return choice
+        response = input("Do you want to play? (yes/no): ").lower()
+        if response in ('yes', 'no'):
+            return response == 'yes'
         else:
-            print("Invalid choice. Please enter 'yes' or 'no'.")
+            print("Please enter 'yes' or 'no'.")
 
 def generate_random_number():
     """Generate a random number between 1 and 10."""
     return random.randint(1, 10)
 
-def get_player_guess():
-    """Prompt the player to guess a number between 1 and 10."""
+def get_user_guess():
+    """Get the player's guess and handle errors."""
     while True:
         try:
             guess = int(input("Guess a number between 1 and 10: "))
             if 1 <= guess <= 10:
                 return guess
             else:
-                print("Invalid guess. Please enter a number between 1 and 10.")
+                print("Please enter a number within the provided range.")
         except ValueError:
-            print("Invalid input. Please enter a valid number.")
-
-def congrats_and_attempts(attempts):
-    """Display a congratulatory message along with the number of attempts."""
-    print(f"Congratulations! You guessed the number. It took you {attempts} attempts.")
+            print("Please enter a valid integer.")
 
 def play_game():
-    """Main function to orchestrate the game."""
+    """Main function to play the game."""
     greet_player()
+    
+    best_score = float('inf')  # Initialize best score to positive infinity
 
-    choice = get_player_choice()
+    while True:
+        if not ask_to_play():
+            print("Goodbye!")
+            break
 
-    if choice == 'yes':
-        print("Great! Let's get started.")
-        target_number = generate_random_number()
-        attempts = guess_number(target_number, 0)
-        congrats_and_attempts(attempts)
-    elif choice == 'no':
-        print("Maybe next time. Goodbye!")
-    else:
-        print("Invalid choice. Please enter 'yes' or 'no'.")
-        play_game()
+        secret_number = generate_random_number()
+        attempts = 0
 
-def guess_number(target_number, attempts):
-    """Recursive function to guess the number."""
-    player_guess = get_player_guess()
+        while True:
+            attempts += 1
+            user_guess = get_user_guess()
 
-    if player_guess == target_number:
-        return attempts + 1
-    else:
-        print("Try again. Wrong guess!")
-        return guess_number(target_number, attempts + 1)
+            if user_guess == secret_number:
+                print(f"Congratulations! You guessed the number {secret_number} in {attempts} attempts.")
+                
+                if attempts < best_score:
+                    best_score = attempts
+                    print(f"New best score: {best_score} attempts!")
+                else:
+                    print(f"Current best score: {best_score} attempts.")
+                    
+                break
+            else:
+                print("Wrong guess. Try again!")
+
+                # Provide a hint
+                if user_guess < secret_number:
+                    print("Hint: The number is higher.")
+                else:
+                    print("Hint: The number is lower.")
 
 if __name__ == "__main__":
     play_game()
